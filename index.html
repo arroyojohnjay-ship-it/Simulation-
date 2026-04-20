@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Johnjay C. Arroyo | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0a192f',
+                        secondary: '#112240',
+                        accent: '#64ffda',
+                        orange_accent: '#e64900',
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass { @apply bg-white/5 backdrop-blur-lg border border-white/10; }
+            .card-hover { @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_30px_-15px_rgba(230,73,0,0.3)]; }
+            .nav-link { @apply relative px-4 py-2 text-gray-300 font-medium hover:text-orange_accent transition-all duration-300; }
+            .nav-link::after { content: ''; @apply absolute left-0 bottom-0 w-0 h-0.5 bg-orange_accent transition-all duration-300; }
+            .nav-link:hover::after { @apply w-full; }
+        }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-primary text-gray-100 font-sans">
+
+    <nav class="fixed w-full bg-primary/80 backdrop-blur-xl z-50 border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-tighter">JC<span class="text-orange_accent">ARROYO</span></h1>
+            <div class="hidden md:flex gap-4">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#projects" class="nav-link">Work</a>
+                <a href="#certificates" class="nav-link">Certificates</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="min-h-screen flex items-center justify-center pt-20">
+        <div class="text-center px-4" data-aos="zoom-in">
+            <div class="relative inline-block mb-8">
+                <div class="absolute -inset-1 bg-orange_accent rounded-full blur opacity-30"></div>
+                <img src="Profile.jpg" alt="Profile" class="relative w-40 h-40 rounded-full object-cover border-2 border-white/10">
+            </div>
+            <h2 class="text-5xl md:text-7xl font-bold mb-4">Johnjay C. Arroyo</h2>
+            <p class="text-xl text-gray-400 mb-10">BSIT Student | Aspiring Developer & Designer</p>
+            <a href="#certificates" class="bg-orange_accent hover:bg-orange-600 px-8 py-3 rounded-lg font-bold transition-all inline-block">View My Credentials</a>
+        </div>
+    </section>
+
+    <section id="certificates" class="py-24 bg-secondary/20">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-12 flex items-center gap-4" data-aos="fade-right">
+                <span class="text-orange_accent font-mono text-xl">01.</span> Certificates & Resume
+                <div class="h-px bg-white/10 flex-1"></div>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up">
+                    <img src="IMG_20260413_070306_131.jpg" class="w-full h-48 object-cover opacity-80">
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold mb-4">ROTC Training certificate</h3>
+                        <div class="flex justify-center gap-4">
+                            <a href="Web_Dev_Cert.pdf" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </a>
+                            <a href="Web_Dev_Cert.pdf" download class="text-green-400 text-sm font-bold border border-green-400/30 px-3 py-1 rounded hover:bg-green-400/10">
+                                <i class="fas fa-download mr-1"></i> Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up">
+                    <img src="IMG_20260413_070724_519.jpg" class="w-full h-48 object-cover opacity-80">
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold mb-4">ROTC Training certificate</h3>
+                        <div class="flex justify-center gap-4">
+                            <a href="IT Training/ Seminar" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </a>
+                            <a href="IT_Seminar.pdf" download class="text-green-400 text-sm font-bold border border-green-400/30 px-3 py-1 rounded hover:bg-green-400/10">
+                                <i class="fas fa-download mr-1"></i> Download
+                           <img src="Screenshot_20260217-143606.jpg" class="w-full h-48 object-cover opacity-80">
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold mb-4">ROTC Training certificate</h3>
+                        <div class="flex justify-center gap-4">
+                            <a href="IT Training/ Seminar" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </a>
+                            <a href="IT_Seminar.pdf" download class="text-green-400 text-sm font-bold border border-green-400/30 px-3 py-1 rounded hover:bg-green-400/10">
+                                <i class="fas fa-download mr-1"></i> Download     
+                            <img src="Screenshot_20260217-143606.jpg" class="w-full h-48 object-cover opacity-80">
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold mb-4">ROTC Training certificate</h3>
+                        <div class="flex justify-center gap-4">
+                            <a href="IT Training/ Seminar" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </a>
+                            <a href="IT_Seminar.pdf" download class="text-green-400 text-sm font-bold border border-green-400/30 px-3 py-1 rounded hover:bg-green-400/10">
+                                <i class="fas fa-download mr-1"></i> Download     
+
+                <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
+                    <img src="Screenshot_20260219-082926_1.png" class="w-full h-48 object-cover opacity-80">
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold mb-4">IT Training/Seminar</h3>
+                        <div class="flex justify-center gap-4">
+                            <a href="IT_Seminar.pdf" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </a>
+                 <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
+                    <img src="IMG_20260413_070306_131.jpg" class="w-full h-48 object-cover opacity-80">
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold mb-4">IT Training/Seminar</h3>
+                        <div class="flex justify-center gap-4">
+                            <a href="IT_Seminar.pdf" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </a>
+                                          
+                    <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
+                    <img src="IMG_20260413_070554_670.jpg" class="w-full h-48 object-cover opacity-80">
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold mb-4">IT Training/Seminar</h3>
+                        <div class="flex justify-center gap-4">
+                            <a href="IT_Seminar.pdf" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </a>
+                    <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
+                    <img src="IMG_20260413_070428_229.jpg" class="w-full h-48 object-cover opacity-80">
+                    <div class="p-6 text-center">
+                        <h3 class="font-bold mb-4">IT Training/Seminar</h3>
+                        <div class="flex justify-center gap-4">
+                            <a href="IT_Seminar.pdf" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
+                                <i class="fas fa-eye mr-1"></i> View
+                            </a>
+                            
+                
+                                
+                            </div>
+                    </div>
+                </div>
+
+                <div class="glass rounded-xl p-8 card-hover flex flex-col items-center justify-center text-center border-2 border-orange_accent/20" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-file-pdf text-6xl text-red-500 mb-4"></i>
+                    <h3 class="font-bold text-xl mb-4">Professional Resume</h3>
+                    <a href="Arroyo_Portfolio_20260408_175730_0000.pdf" target="_blank" class="w-full bg-orange_accent text-white py-2 rounded font-bold hover:bg-orange-600 transition-all mb-2">
+                        Open File
+                    </a>
+                    <a href="Arroyo_Portfolio_20260408_175730_0000.pdf" download class="text-gray-400 text-xs hover:text-white">
+                        <i class="fas fa-download mr-1"></i> Download PDF
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center border-t border-white/5 text-gray-500 text-sm">
+        <p>&copy; 2026 Johnjay C. Arroyo. Built with Tailwind CSS.</p>
+    </footer>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+    </script>
+</body>
+    </html>
