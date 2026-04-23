@@ -2,178 +2,322 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>WGflow | Advanced Logic</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Johnjay C. Arroyo | Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#0a192f',
-                        secondary: '#112240',
-                        accent: '#64ffda',
-                        orange_accent: '#e64900',
-                    },
-                }
-            }
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --bg-dark: #020617;
+            --glass: rgba(15, 23, 42, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-dim: #64748b;
         }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .glass { @apply bg-white/5 backdrop-blur-lg border border-white/10; }
-            .card-hover { @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_10px_30px_-15px_rgba(230,73,0,0.3)]; }
-            .nav-link { @apply relative px-4 py-2 text-gray-300 font-medium hover:text-orange_accent transition-all duration-300; }
-            .nav-link::after { content: ''; @apply absolute left-0 bottom-0 w-0 h-0.5 bg-orange_accent transition-all duration-300; }
-            .nav-link:hover::after { @apply w-full; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-image: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
         }
-        html { scroll-behavior: smooth; }
+
+        .quit-btn {
+            position: absolute; top: 20px; left: 20px; padding: 10px 18px;
+            background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger); border-radius: 12px; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem; font-weight: 700; cursor: pointer; z-index: 100;
+            transition: 0.3s; display: none;
+        }
+        .quit-btn:hover { background: var(--danger); color: white; }
+
+        .app-container { width: 100%; max-width: 440px; padding: 20px; z-index: 10; }
+
+        .glass-card {
+            background: var(--glass); backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border); border-radius: 32px;
+            padding: 28px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .history-container {
+            margin-top: 20px; background: rgba(0,0,0,0.3);
+            border-radius: 16px; padding: 15px; border: 1px solid var(--glass-border);
+        }
+        .history-header { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        #logList { height: 110px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; }
+        .log-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .status-win { color: var(--success); font-weight: bold; }
+        .status-fail { color: var(--danger); font-weight: bold; }
+
+        .diff-selector { display: flex; gap: 8px; margin-bottom: 20px; }
+        .diff-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.05); color: var(--text-dim); cursor: pointer; font-size: 0.7rem; font-weight: 700; }
+        .diff-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        .cipher-box {
+            font-family: 'JetBrains Mono', monospace; background: rgba(0,0,0,0.5);
+            border-radius: 16px; padding: 20px; margin: 15px 0; font-size: 1.8rem;
+            color: var(--primary); letter-spacing: 4px; text-align: center; border: 1px dashed var(--glass-border);
+            text-transform: uppercase; word-break: break-all;
+        }
+
+        input {
+            width: 100%; padding: 15px; border-radius: 14px; border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.05); color: white; font-size: 1rem; text-align: center; margin-bottom: 15px; outline: none;
+        }
+        button.main-action { width: 100%; padding: 15px; border-radius: 14px; border: none; background: var(--primary); color: white; font-weight: 800; cursor: pointer; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .stat-box { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 12px; text-align: center; }
+        .stat-val { font-weight: 700; font-size: 1.1rem; }
+        .stat-lab { font-size: 0.6rem; color: var(--text-dim); }
+
+        #timerBar { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-bottom: 15px; overflow: hidden; }
+        #timerFill { height: 100%; width: 100%; background: var(--primary); transition: width 1s linear; }
     </style>
 </head>
-<body class="bg-primary text-gray-100 font-sans">
+<body>
 
-    <nav class="fixed w-full bg-primary/80 backdrop-blur-xl z-50 border-b border-white/5">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold tracking-tighter">JC<span class="text-orange_accent">ARROYO</span></h1>
-            <div class="hidden md:flex gap-4">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#about" class="nav-link">About</a>
-                <a href="#projects" class="nav-link">Work</a>
-                <a href="#certificates" class="nav-link">Certificates</a>
-            </div>
+<button class="quit-btn" id="quitBtn" onclick="location.reload()">QUIT</button>
+
+<div class="app-container">
+    <div class="glass-card" id="startScreen">
+        <h1 style="margin-bottom: 5px;">WGflow</h1>
+        <p style="font-size: 0.7rem; color: var(--primary); letter-spacing: 2px; margin-bottom: 25px;">ADVANCED LOGIC</p>
+        
+        <label style="font-size: 0.65rem; color: var(--text-dim); display: block; margin-bottom: 8px;">SELECT DIFFICULTY</label>
+        <div class="diff-selector">
+            <button class="diff-btn active" onclick="setDifficulty('easy', this)">EASY</button>
+            <button class="diff-btn" onclick="setDifficulty('medium', this)">MEDIUM</button>
+            <button class="diff-btn" onclick="setDifficulty('hard', this)">HARD</button>
         </div>
-    </nav>
 
-    <section id="home" class="min-h-screen flex items-center justify-center pt-20">
-        <div class="text-center px-4" data-aos="zoom-in">
-            <div class="relative inline-block mb-8">
-                <div class="absolute -inset-1 bg-orange_accent rounded-full blur opacity-30"></div>
-                <img src="Profile.jpg" alt="Profile" class="relative w-40 h-40 rounded-full object-cover border-2 border-white/10">
-            </div>
-            <h2 class="text-5xl md:text-7xl font-bold mb-4">Johnjay C. Arroyo</h2>
-            <p class="text-xl text-gray-400 mb-10">BSIT Student | Aspiring Developer & Designer</p>
-            <a href="#certificates" class="bg-orange_accent hover:bg-orange-600 px-8 py-3 rounded-lg font-bold transition-all inline-block">View My Credentials</a>
+        <input type="text" id="username" placeholder="USERNAME" autocomplete="off">
+        <button class="main-action" onclick="startGame()">START GAME</button>
+    </div>
+
+    <div class="glass-card" id="gameScreen" style="display: none;">
+        <div class="stats-grid">
+            <div class="stat-box"><div class="stat-lab">SCORE</div><div class="stat-val" id="scoreVal">0</div></div>
+            <div class="stat-box"><div class="stat-lab">TIME</div><div class="stat-val" id="timeVal">--</div></div>
+            <div class="stat-box"><div class="stat-lab">ACCURACY</div><div class="stat-val" id="accVal">0%</div></div>
         </div>
-    </section>
 
-    <section id="certificates" class="py-24 bg-secondary/20">
-        <div class="max-w-6xl mx-auto px-6">
-            <h2 class="text-3xl font-bold mb-12 flex items-center gap-4" data-aos="fade-right">
-                <span class="text-orange_accent font-mono text-xl">01.</span> Certificates & Resume
-                <div class="h-px bg-white/10 flex-1"></div>
-            </h2>
+        <div id="timerBar"><div id="timerFill"></div></div>
+        <div class="cipher-box" id="scrambledWord">----</div>
+        
+        <input type="text" id="userInput" placeholder="Input Decryption..." autocomplete="off">
+        <button class="main-action" onclick="checkAnswer()">SUBMIT</button>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up">
-                    <img src="IMG_20260413_070306_131.jpg" class="w-full h-48 object-cover opacity-80">
-                    <div class="p-6 text-center">
-                        <h3 class="font-bold mb-4">ROTC Training certificate</h3>
-                        <div class="flex justify-center gap-4">
-                            <a href="Web_Dev_Cert.pdf" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
-                                <i class="fas fa-eye mr-1"></i> View
-                            </a>
-                            <a href="Web_Dev_Cert.pdf" download class="text-green-400 text-sm font-bold border border-green-400/30 px-3 py-1 rounded hover:bg-green-400/10">
-                                <i class="fas fa-download mr-1"></i> Download
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up">
-                    <img src="IMG_20260413_070724_519.jpg" class="w-full h-48 object-cover opacity-80">
-                    <div class="p-6 text-center">
-                        <h3 class="font-bold mb-4">ROTC Training certificate</h3>
-                        <div class="flex justify-center gap-4">
-                            <a href="IT Training/ Seminar" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
-                                <i class="fas fa-eye mr-1"></i> View
-                            </a>
-                            <a href="IT_Seminar.pdf" download class="text-green-400 text-sm font-bold border border-green-400/30 px-3 py-1 rounded hover:bg-green-400/10">
-                                <i class="fas fa-download mr-1"></i> Download
-                           <img src="Screenshot_20260217-143606.jpg" class="w-full h-48 object-cover opacity-80">
-                    <div class="p-6 text-center">
-                        <h3 class="font-bold mb-4">ROTC Training certificate</h3>
-                        <div class="flex justify-center gap-4">
-                            <a href="IT Training/ Seminar" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
-                                <i class="fas fa-eye mr-1"></i> View
-                            </a>
-                            <a href="IT_Seminar.pdf" download class="text-green-400 text-sm font-bold border border-green-400/30 px-3 py-1 rounded hover:bg-green-400/10">
-                                <i class="fas fa-download mr-1"></i> Download     
-                            <img src="Screenshot_20260217-143606.jpg" class="w-full h-48 object-cover opacity-80">
-                    <div class="p-6 text-center">
-                        <h3 class="font-bold mb-4">ROTC Training certificate</h3>
-                        <div class="flex justify-center gap-4">
-                            <a href="IT Training/ Seminar" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
-                                <i class="fas fa-eye mr-1"></i> View
-                            </a>
-                            <a href="IT_Seminar.pdf" download class="text-green-400 text-sm font-bold border border-green-400/30 px-3 py-1 rounded hover:bg-green-400/10">
-                                <i class="fas fa-download mr-1"></i> Download     
-
-                <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
-                    <img src="Screenshot_20260219-082926_1.png" class="w-full h-48 object-cover opacity-80">
-                    <div class="p-6 text-center">
-                        <h3 class="font-bold mb-4">IT Training/Seminar</h3>
-                        <div class="flex justify-center gap-4">
-                            <a href="IT_Seminar.pdf" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
-                                <i class="fas fa-eye mr-1"></i> View
-                            </a>
-                 <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
-                    <img src="IMG_20260413_070306_131.jpg" class="w-full h-48 object-cover opacity-80">
-                    <div class="p-6 text-center">
-                        <h3 class="font-bold mb-4">IT Training/Seminar</h3>
-                        <div class="flex justify-center gap-4">
-                            <a href="IT_Seminar.pdf" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
-                                <i class="fas fa-eye mr-1"></i> View
-                            </a>
-                                          
-                    <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
-                    <img src="IMG_20260413_070554_670.jpg" class="w-full h-48 object-cover opacity-80">
-                    <div class="p-6 text-center">
-                        <h3 class="font-bold mb-4">IT Training/Seminar</h3>
-                        <div class="flex justify-center gap-4">
-                            <a href="IT_Seminar.pdf" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
-                                <i class="fas fa-eye mr-1"></i> View
-                            </a>
-                    <div class="glass rounded-xl overflow-hidden card-hover" data-aos="fade-up" data-aos-delay="100">
-                    <img src="IMG_20260413_070428_229.jpg" class="w-full h-48 object-cover opacity-80">
-                    <div class="p-6 text-center">
-                        <h3 class="font-bold mb-4">IT Training/Seminar</h3>
-                        <div class="flex justify-center gap-4">
-                            <a href="IT_Seminar.pdf" target="_blank" class="text-orange_accent text-sm font-bold border border-orange_accent/30 px-3 py-1 rounded hover:bg-orange_accent/10">
-                                <i class="fas fa-eye mr-1"></i> View
-                            </a>
-                            
-                
-                                
-                            </div>
-                    </div>
-                </div>
-
-                <div class="glass rounded-xl p-8 card-hover flex flex-col items-center justify-center text-center border-2 border-orange_accent/20" data-aos="fade-up" data-aos-delay="200">
-                    <i class="fas fa-file-pdf text-6xl text-red-500 mb-4"></i>
-                    <h3 class="font-bold text-xl mb-4">Professional Resume</h3>
-                    <a href="Arroyo_Portfolio_20260408_175730_0000.pdf" target="_blank" class="w-full bg-orange_accent text-white py-2 rounded font-bold hover:bg-orange-600 transition-all mb-2">
-                        Open File
-                    </a>
-                    <a href="Arroyo_Portfolio_20260408_175730_0000.pdf" download class="text-gray-400 text-xs hover:text-white">
-                        <i class="fas fa-download mr-1"></i> Download PDF
-                    </a>
-                </div>
-
-            </div>
+        <div class="history-container">
+            <div class="history-header"><span>History Log</span><span id="logCount">0 Events</span></div>
+            <div id="logList"></div>
         </div>
-    </section>
+    </div>
+</div>
 
-    <footer class="py-10 text-center border-t border-white/5 text-gray-500 text-sm">
-        <p>&copy; 2026 Johnjay C. Arroyo. Built with Tailwind CSS.</p>
-    </footer>
+<script>
+    let difficulty = 'easy';
+    let score = 0;
+    let attempts = 0;
+    let correct = 0;
+    let timer;
+    let timeLeft;
+    let currentWord = "";
+    let isTransitioning = false;
 
-    <script>
-        AOS.init({ duration: 1000, once: true });
-    </script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const wordBank = {
+        easy: [
+            "apple", "beach", "cloud", "dance", "earth", "field", "grape", "house", "image", "light", 
+            "stamp", "flake", "knife", "lemon", "money", "nurse", "ocean", "paste", "queen", "sense", 
+            "taste", "unite", "vase", "waste", "brief", "catch", "eagle", "fruit", "ghost", "horse", 
+            "jelly", "lance", "mango", "unify", "bread", "clock", "flame", "green", "heart", "juice",
+            "music", "night", "paint", "quiet", "river", "smile", "table", "under", "voice", "water",
+            "young", "zebra", "alarm", "brick", "candy", "dream", "entry", "fresh", "glass", "honey"
+        ],
+        medium: [
+            "archive", "balance", "capture", "default", "element", "factory", "glacier", "harvest", "imagine", "journal", 
+            "kingdom", "lantern", "measure", "network", "operate", "package", "quality", "radiant", "segment", "therapy", 
+            "unknown", "vantage", "weather", "yielded", "zenith", "adapter", "benefit", "cluster", "dynamic", "evolve", 
+            "formula", "gravity", "holiday", "inspect", "justice", "kitchen", "library", "morning", "nothing", "outside",
+            "provide", "quarter", "respect", "science", "thought", "uniform", "village", "warning", "builder", "desktop",
+            "explore", "fortune", "garment", "history", "include", "journey", "keynote", "loyalty", "monitor", "natural"
+        ],
+        hard: [
+            "algorithm", "bandwidth", "cyberspace", "deployment", "encryption", "framework", "generation", "hypothesis", "interface", "javascript", 
+            "knowledge", "landscape", "middleware", "navigation", "occurrence", "philosophy", "quarantine", "resolution", "simulation", "transition", 
+            "underworld", "validation", "wavelength", "xenophobia", "yesteryear", "zoological", "atmosphere", "background", "collection", "discipline", 
+            "experience", "foundation", "government", "historical", "indication", "leadership", "management", "newsletter", "objectives", "particular",
+            "questioned", "reasonable", "strategies", "technology", "understand", "vocabulary", "wilderness", "xenonlamp", "youthfully", "zookeeper",
+            "architect", "biological", "complexity", "dictionary", "efficiency", "functional", "graduation", "humanities", "investment", "journalism"
+        ]
+    };
+
+    const compliments = ["EXCELLENT!", "PERFECT!", "FLAWLESS!", "GODLIKE!", "SENSATIONAL!", "AMAZING!", "BRILLIANT!"];
+
+    const config = {
+        easy: { time: 45, points: 10 },
+        medium: { time: 30, points: 25 },
+        hard: { time: 15, points: 50 }
+    };
+
+    function playSound(isWin) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        if(isWin) {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+        } else {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(110, audioCtx.currentTime);
+            osc.frequency.linearRampToValueAtTime(55, audioCtx.currentTime + 0.2);
+            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+        }
+        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+    }
+
+    function setDifficulty(lvl, el) {
+        difficulty = lvl;
+        document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    function scramble(word) {
+        let arr = word.split('');
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        let scrambled = arr.join('');
+        return (scrambled === word && word.length > 1) ? scramble(word) : scrambled;
+    }
+
+    function startGame() {
+        if(!document.getElementById('username').value) return alert("Agent ID required");
+        audioCtx.resume();
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('gameScreen').style.display = 'block';
+        document.getElementById('quitBtn').style.display = 'block';
+        nextRound();
+    }
+
+    function nextRound() {
+        isTransitioning = false;
+        const words = wordBank[difficulty];
+        currentWord = words[Math.floor(Math.random() * words.length)];
+        
+        const display = document.getElementById('scrambledWord');
+        display.innerText = scramble(currentWord);
+        display.style.color = 'var(--primary)';
+        
+        document.getElementById('userInput').value = "";
+        document.getElementById('userInput').focus();
+        
+        timeLeft = config[difficulty].time;
+        updateTimerUI();
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(() => {
+            timeLeft--;
+            updateTimerUI();
+            if(timeLeft <= 0) {
+                clearInterval(timer);
+                playSound(false);
+                alert("SESSION EXPIRED. Final Score: " + score);
+                location.reload();
+            }
+        }, 1000);
+    }
+
+    function updateTimerUI() {
+        document.getElementById('timeVal').innerText = timeLeft;
+        const perc = (timeLeft / config[difficulty].time) * 100;
+        document.getElementById('timerFill').style.width = perc + "%";
+        document.getElementById('timerFill').style.background = perc < 30 ? 'var(--danger)' : 'var(--primary)';
+    }
+
+    function addLog(type, word, className) {
+        const list = document.getElementById('logList');
+        const entry = document.createElement('div');
+        entry.className = 'log-item';
+        entry.innerHTML = `
+            <span class="${className}">[${type}]</span>
+            <span style="color:var(--text-dim)">${word.toUpperCase()}</span>
+            <span style="font-size:0.5rem; color:rgba(255,255,255,0.1)">#${attempts.toString().padStart(3, '0')}</span>
+        `;
+        list.prepend(entry);
+        document.getElementById('logCount').innerText = attempts + " Events";
+    }
+
+    function checkAnswer() {
+        if(isTransitioning) return;
+        const inputEl = document.getElementById('userInput');
+        const displayEl = document.getElementById('scrambledWord');
+        const val = inputEl.value.toLowerCase().trim();
+        
+        if(!val) return;
+        attempts++;
+
+        if(val === currentWord) {
+            isTransitioning = true;
+            correct++;
+            score += config[difficulty].points;
+            playSound(true);
+            
+            displayEl.innerText = compliments[Math.floor(Math.random() * compliments.length)];
+            displayEl.style.color = 'var(--success)';
+            document.getElementById('scoreVal').innerText = score;
+            
+            addLog("SUCCESS", currentWord, "status-win");
+            
+            clearInterval(timer);
+            setTimeout(nextRound, 1000);
+        } else {
+            playSound(false);
+            addLog("FAILED", val, "status-fail");
+            
+            displayEl.innerText = "RETRY";
+            displayEl.style.color = 'var(--danger)';
+            inputEl.value = "";
+            
+            document.getElementById('gameScreen').style.animation = "shake 0.3s ease";
+            setTimeout(() => {
+                document.getElementById('gameScreen').style.animation = "";
+                if(!isTransitioning) {
+                    displayEl.innerText = scramble(currentWord);
+                    displayEl.style.color = 'var(--primary)';
+                }
+            }, 600);
+        }
+        document.getElementById('accVal').innerText = Math.round((correct/attempts)*100) + "%";
+    }
+
+    document.getElementById('userInput').addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') checkAnswer();
+    });
+</script>
+
 </body>
     </html>
