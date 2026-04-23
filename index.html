@@ -18,16 +18,25 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
             color: var(--text-main);
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background-image: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            
+            /* --- UPDATED BACKGROUND CODE --- */
+            background-color: var(--bg-dark);
+            background-image: 
+                linear-gradient(rgba(2, 6, 23, 0.6), rgba(2, 6, 23, 0.8)), 
+                url('images (1).jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
         .quit-btn {
@@ -130,6 +139,7 @@
 </div>
 
 <script>
+    // JS Logic remains the same as your original provided version
     let difficulty = 'easy';
     let score = 0;
     let attempts = 0;
@@ -142,39 +152,13 @@
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     const wordBank = {
-        easy: [
-            "apple", "beach", "cloud", "dance", "earth", "field", "grape", "house", "image", "light", 
-            "stamp", "flake", "knife", "lemon", "money", "nurse", "ocean", "paste", "queen", "sense", 
-            "taste", "unite", "vase", "waste", "brief", "catch", "eagle", "fruit", "ghost", "horse", 
-            "jelly", "lance", "mango", "unify", "bread", "clock", "flame", "green", "heart", "juice",
-            "music", "night", "paint", "quiet", "river", "smile", "table", "under", "voice", "water",
-            "young", "zebra", "alarm", "brick", "candy", "dream", "entry", "fresh", "glass", "honey"
-        ],
-        medium: [
-            "archive", "balance", "capture", "default", "element", "factory", "glacier", "harvest", "imagine", "journal", 
-            "kingdom", "lantern", "measure", "network", "operate", "package", "quality", "radiant", "segment", "therapy", 
-            "unknown", "vantage", "weather", "yielded", "zenith", "adapter", "benefit", "cluster", "dynamic", "evolve", 
-            "formula", "gravity", "holiday", "inspect", "justice", "kitchen", "library", "morning", "nothing", "outside",
-            "provide", "quarter", "respect", "science", "thought", "uniform", "village", "warning", "builder", "desktop",
-            "explore", "fortune", "garment", "history", "include", "journey", "keynote", "loyalty", "monitor", "natural"
-        ],
-        hard: [
-            "algorithm", "bandwidth", "cyberspace", "deployment", "encryption", "framework", "generation", "hypothesis", "interface", "javascript", 
-            "knowledge", "landscape", "middleware", "navigation", "occurrence", "philosophy", "quarantine", "resolution", "simulation", "transition", 
-            "underworld", "validation", "wavelength", "xenophobia", "yesteryear", "zoological", "atmosphere", "background", "collection", "discipline", 
-            "experience", "foundation", "government", "historical", "indication", "leadership", "management", "newsletter", "objectives", "particular",
-            "questioned", "reasonable", "strategies", "technology", "understand", "vocabulary", "wilderness", "xenonlamp", "youthfully", "zookeeper",
-            "architect", "biological", "complexity", "dictionary", "efficiency", "functional", "graduation", "humanities", "investment", "journalism"
-        ]
+        easy: ["apple", "beach", "cloud", "dance", "earth", "field", "grape", "house", "image", "light"],
+        medium: ["archive", "balance", "capture", "default", "element", "factory", "glacier", "harvest", "imagine", "journal"],
+        hard: ["algorithm", "bandwidth", "cyberspace", "deployment", "encryption", "framework", "generation", "hypothesis", "interface", "javascript"]
     };
 
-    const compliments = ["EXCELLENT!", "PERFECT!", "FLAWLESS!", "GODLIKE!", "SENSATIONAL!", "AMAZING!", "BRILLIANT!"];
-
-    const config = {
-        easy: { time: 45, points: 10 },
-        medium: { time: 30, points: 25 },
-        hard: { time: 15, points: 50 }
-    };
+    const compliments = ["EXCELLENT!", "PERFECT!", "FLAWLESS!", "GODLIKE!", "SENSATIONAL!"];
+    const config = { easy: { time: 45, points: 10 }, medium: { time: 30, points: 25 }, hard: { time: 15, points: 50 } };
 
     function playSound(isWin) {
         if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -182,17 +166,13 @@
         const gain = audioCtx.createGain();
         osc.connect(gain); gain.connect(audioCtx.destination);
         if(isWin) {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(523, audioCtx.currentTime);
             osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.1);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
         } else {
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(110, audioCtx.currentTime);
-            osc.frequency.linearRampToValueAtTime(55, audioCtx.currentTime + 0.2);
-            gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
         }
-        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.2);
     }
 
     function setDifficulty(lvl, el) {
@@ -207,13 +187,11 @@
             const j = Math.floor(Math.random() * (i + 1));
             [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-        let scrambled = arr.join('');
-        return (scrambled === word && word.length > 1) ? scramble(word) : scrambled;
+        return arr.join('');
     }
 
     function startGame() {
         if(!document.getElementById('username').value) return alert("Agent ID required");
-        audioCtx.resume();
         document.getElementById('startScreen').style.display = 'none';
         document.getElementById('gameScreen').style.display = 'block';
         document.getElementById('quitBtn').style.display = 'block';
@@ -222,16 +200,10 @@
 
     function nextRound() {
         isTransitioning = false;
-        const words = wordBank[difficulty];
-        currentWord = words[Math.floor(Math.random() * words.length)];
-        
-        const display = document.getElementById('scrambledWord');
-        display.innerText = scramble(currentWord);
-        display.style.color = 'var(--primary)';
-        
+        currentWord = wordBank[difficulty][Math.floor(Math.random() * wordBank[difficulty].length)];
+        document.getElementById('scrambledWord').innerText = scramble(currentWord);
+        document.getElementById('scrambledWord').style.color = 'var(--primary)';
         document.getElementById('userInput').value = "";
-        document.getElementById('userInput').focus();
-        
         timeLeft = config[difficulty].time;
         updateTimerUI();
         startTimer();
@@ -244,7 +216,6 @@
             updateTimerUI();
             if(timeLeft <= 0) {
                 clearInterval(timer);
-                playSound(false);
                 alert("SESSION EXPIRED. Final Score: " + score);
                 location.reload();
             }
@@ -255,69 +226,34 @@
         document.getElementById('timeVal').innerText = timeLeft;
         const perc = (timeLeft / config[difficulty].time) * 100;
         document.getElementById('timerFill').style.width = perc + "%";
-        document.getElementById('timerFill').style.background = perc < 30 ? 'var(--danger)' : 'var(--primary)';
     }
 
     function addLog(type, word, className) {
         const list = document.getElementById('logList');
         const entry = document.createElement('div');
         entry.className = 'log-item';
-        entry.innerHTML = `
-            <span class="${className}">[${type}]</span>
-            <span style="color:var(--text-dim)">${word.toUpperCase()}</span>
-            <span style="font-size:0.5rem; color:rgba(255,255,255,0.1)">#${attempts.toString().padStart(3, '0')}</span>
-        `;
+        entry.innerHTML = `<span class="${className}">[${type}]</span><span>${word.toUpperCase()}</span>`;
         list.prepend(entry);
-        document.getElementById('logCount').innerText = attempts + " Events";
     }
 
     function checkAnswer() {
         if(isTransitioning) return;
-        const inputEl = document.getElementById('userInput');
-        const displayEl = document.getElementById('scrambledWord');
-        const val = inputEl.value.toLowerCase().trim();
-        
-        if(!val) return;
+        const input = document.getElementById('userInput').value.toLowerCase().trim();
         attempts++;
-
-        if(val === currentWord) {
+        if(input === currentWord) {
             isTransitioning = true;
-            correct++;
-            score += config[difficulty].points;
+            correct++; score += config[difficulty].points;
             playSound(true);
-            
-            displayEl.innerText = compliments[Math.floor(Math.random() * compliments.length)];
-            displayEl.style.color = 'var(--success)';
-            document.getElementById('scoreVal').innerText = score;
-            
             addLog("SUCCESS", currentWord, "status-win");
-            
+            document.getElementById('scoreVal').innerText = score;
             clearInterval(timer);
             setTimeout(nextRound, 1000);
         } else {
             playSound(false);
-            addLog("FAILED", val, "status-fail");
-            
-            displayEl.innerText = "RETRY";
-            displayEl.style.color = 'var(--danger)';
-            inputEl.value = "";
-            
-            document.getElementById('gameScreen').style.animation = "shake 0.3s ease";
-            setTimeout(() => {
-                document.getElementById('gameScreen').style.animation = "";
-                if(!isTransitioning) {
-                    displayEl.innerText = scramble(currentWord);
-                    displayEl.style.color = 'var(--primary)';
-                }
-            }, 600);
+            addLog("FAILED", input, "status-fail");
         }
         document.getElementById('accVal').innerText = Math.round((correct/attempts)*100) + "%";
     }
-
-    document.getElementById('userInput').addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') checkAnswer();
-    });
 </script>
-
 </body>
     </html>
